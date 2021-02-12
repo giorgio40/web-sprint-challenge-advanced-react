@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react/pure";
+import { render, screen, waitFor} from "@testing-library/react/pure";
 import CheckoutForm from "./CheckoutForm";
 import userEvent from "@testing-library/user-event";
 
@@ -11,7 +11,7 @@ test("form header renders", () => {
   expect(header).toBeInTheDocument()
 });
 
-test("form shows success message on submit with form details", () => {
+test("form shows success message on submit with form details",async () => {
  const {debug} = render(<CheckoutForm />);
 
   const nameInput = screen.findByTestId('firstName');
@@ -20,7 +20,6 @@ test("form shows success message on submit with form details", () => {
   const cityInput = screen.findByTestId('city');
   const stateInput = screen.findByTestId('state');
   const zipInput = screen.findByTestId('zip');
-  const message = screen.findByTestId("successMessage")
   
 
   userEvent.type(nameInput, "John");
@@ -34,8 +33,9 @@ test("form shows success message on submit with form details", () => {
      userEvent.click(button[0]);
 
      
-  expect(nameInput).toHaveValue("John")
- 
+     waitFor(() => {
+        expect(getByText('John')).toBeInTheDocument()
+      })
 //   expect(lastNameInput).toHaveValue("Hedges")
 //   expect(addressInput).toHaveValue("3887 Rocky Road")
 //   expect(cityInput).toHaveValue("Charlottesville")
